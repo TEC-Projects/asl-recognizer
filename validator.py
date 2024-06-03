@@ -3,7 +3,7 @@
 import pickle
 import matplotlib.pyplot as plt
 from os.path import join
-from sklearn.neural_network import MLPClassifier
+import sklearn.svm
 import numpy as np
 import seaborn as sn
 
@@ -48,9 +48,18 @@ def show_confusion_matrix(confusion_matrix):
     plt.show()
 
 
-def get_neural_network(vectors):
-    clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)
+def get_support_vector_machine_mode(vectors):
+    svm = sklearn.svm.SVC(kernel='linear', C=1.0)
+    x = []
+    y = []
+    for _class in vectors.keys():
+        x += vectors[_class]
+        y += [_class] * len(vectors[_class])
 
+    # Fit the model to the training data
+    svm.fit(x, y)
+
+    return svm
 
 def get_classifier(trained_model_path=""):
     """
@@ -76,13 +85,27 @@ def main():
     """
     Procedure that retrieves features, trains the classifier and tests it
     """
-    statisticalClassifier, test_dataset = get_classifier()
-    score, confusion_matrix = statisticalClassifier.score(test_dataset)
+    # statisticalClassifier, test_dataset = get_classifier()
+    # score, confusion_matrix = statisticalClassifier.score(test_dataset)
 
-    show_confusion_matrix(confusion_matrix)
+    statisticalClassifier = StatisticalClassifier()
+    vectors = load_object("./features/")
+    train, test = statisticalClassifier.split(vectors)
+    svm = get_support_vector_machine_mode(train)
 
-    for i in range(confusion_matrix.shape[0]):
-        print(f"Class {i}: accuracy: {confusion_matrix[i, i] / np.sum(confusion_matrix[i])}")
+    x = []
+    y = []
+    for _class in test.keys():
+        x += test[_class]
+        y += [_class] * len(test[_class])
+
+    score = svm.score(x, y)
+
+
+    # show_confusion_matrix(confusion_matrix)
+
+    # for i in range(confusion_matrix.shape[0]):
+    #     print(f"Class {i}: accuracy: {confusion_matrix[i, i] / np.sum(confusion_matrix[i])}")
 
     print("Overall score: ", score)
 
