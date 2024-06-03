@@ -3,7 +3,7 @@
 import pickle
 import matplotlib.pyplot as plt
 from os.path import join
-
+from sklearn.neural_network import MLPClassifier
 import numpy as np
 import seaborn as sn
 
@@ -46,6 +46,10 @@ def show_confusion_matrix(confusion_matrix):
     plt.xlabel("Predicciones")
     plt.ylabel("Objetivo")
     plt.show()
+
+
+def get_neural_network(vectors):
+    clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1)
 
 
 def get_classifier(trained_model_path=""):
