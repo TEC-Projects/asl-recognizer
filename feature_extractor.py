@@ -10,6 +10,8 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
+MAX_IMAGES_PER_CLASS = 10
+
 
 def save_features(features, save_path):
     """
@@ -56,7 +58,8 @@ def extract_features(dataset_path, save_path):
             features_vectors[directory] = []
 
             for file_name in file_names:
-                if count > 10:
+                # This is where the extraction is stopped when reached the maximum images per classs
+                if count > MAX_IMAGES_PER_CLASS:
                     break
                 image = cv2.flip(cv2.imread(join(full_dir, file_name)), 1)
                 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)

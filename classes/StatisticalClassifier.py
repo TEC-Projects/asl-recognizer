@@ -94,7 +94,7 @@ class StatisticalClassifier:
         confusion_matrix = np.zeros((classes_count, classes_count))
         tested_count = 0
         n = min([len(x) for x in test_dict.values()])
-        class_map = {_class: index for index, _class in enumerate(test_dict.keys().sort())}
+        class_map = {_class: index for index, _class in enumerate(test_dict.keys())}
         for _class in test_dict.keys():
             class_array = test_dict[_class]
             tested_count += class_array.shape[0]
