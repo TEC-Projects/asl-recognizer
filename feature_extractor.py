@@ -2,6 +2,8 @@
 
 from os import listdir, curdir
 from os.path import isfile, isdir, join
+from random import shuffle
+
 import cv2
 import mediapipe as mp
 import pickle
@@ -24,7 +26,7 @@ lineType = 2
 org = (50, 50)
 
 # Feature extraction limit
-MAX_IMAGES_PER_CLASS = 10
+MAX_IMAGES_PER_CLASS = 1000
 
 
 def format_vector(landmarks):
@@ -154,16 +156,20 @@ def extract_features(dataset_path, save_path):
 
         # For each directory retrieve its files
         for directory in dirs:
+
+            print("Current letter: " + directory)
+
             # Full directory path
             full_dir = join(dataset_path, directory)
             # Retrieve file names under the full directory path
             file_names = [f for f in listdir(full_dir) if isfile(join(full_dir, f))]
-
+            shuffle(file_names)
             count = 0  # Count of specimens per class
             features_vectors[directory] = []  # Init directory class with empty list
 
             # For each image extract its features
             for file_name in file_names:
+                # print("COUNT: " + str(count) + " FILENAME: " + file_name)
                 # This is where the extraction is stopped when reached the maximum images per class
                 if count > MAX_IMAGES_PER_CLASS:
                     break
