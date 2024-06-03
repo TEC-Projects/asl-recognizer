@@ -82,6 +82,8 @@ def main():
 
     print("Overall score: ", score)
 
+    save_model(statisticalClassifier)
+
 
 # Example validation run: python ./validator.py
 if __name__ == '__main__':
