@@ -20,7 +20,7 @@ class StatisticalClassifier:
 
     def compute_each_class_prob(self, vector):
         """
-        Method that calculates the probability of a vector of being classified as either clsss
+        Method that calculates the probability of a vector of being classified as either class
         :param vector: features vector
         :return: probabilities dict
         """
@@ -76,7 +76,9 @@ class StatisticalClassifier:
         :return:
         """
         predictions = []
-        for vector, _ in vectors:
+        for vector in vectors:
+            if type(vector) is tuple:
+                vector = vector[0]
             probs_dict = self.compute_each_class_prob(vector)
             predictions.append(max(probs_dict, key=probs_dict.get))
 
