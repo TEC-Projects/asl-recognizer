@@ -109,7 +109,7 @@ def main():
 
     print("Overall score: ", score)
 
-    save_model(statisticalClassifier)
+    save_model(statisticalClassifier, "./model")
 
 
 # Example validation run: python ./validator.py
