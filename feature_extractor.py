@@ -26,7 +26,7 @@ lineType = 2
 org = (50, 50)
 
 # Feature extraction limit
-MAX_IMAGES_PER_CLASS = 1000
+MAX_IMAGES_PER_CLASS = 300
 
 
 def format_vector(landmarks):
