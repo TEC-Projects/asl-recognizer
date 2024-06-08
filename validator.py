@@ -41,20 +41,28 @@ def save_model(features, save_path):
 
 
 def show_confusion_matrix(confusion_matrix):
-    sn.heatmap(confusion_matrix, annot=True)
+    sn.heatmap(confusion_matrix, annot=True, fmt='g')
     plt.title("Matriz de confusión para la clasificación del abecedario ASL")
     plt.xlabel("Predicciones")
     plt.ylabel("Objetivo")
     plt.show()
 
 
-def get_support_vector_machine_mode(vectors):
+def get_support_vector_machine_model(vectors):
+    """
+    Function that instances and trains the SVM model
+    :param vectors: dictionary of labels and feature vectors
+    :return: Trained SVM model
+    """
+    # Instance the model
     svm = sklearn.svm.SVC(kernel='linear', C=1.0)
+
+    # Convert the data
     x = []
     y = []
     for _class in vectors.keys():
-        x += vectors[_class]
-        y += [_class] * len(vectors[_class])
+        x.extend(vectors[_class])
+        y.extend([_class]*len(vectors[_class]))
 
     # Fit the model to the training data
     svm.fit(x, y)
@@ -81,38 +89,57 @@ def get_classifier(trained_model_path=""):
         return load_model(trained_model_path)
 
 
-def main():
+def main_statistical():
     """
     Procedure that retrieves features, trains the classifier and tests it
     """
-    # statisticalClassifier, test_dataset = get_classifier()
-    # score, confusion_matrix = statisticalClassifier.score(test_dataset)
+    statisticalClassifier, test_dataset = get_classifier()
+    score, confusion_matrix = statisticalClassifier.score(test_dataset)
 
-    statisticalClassifier = StatisticalClassifier()
-    vectors = load_object("./features/")
-    train, test = statisticalClassifier.split(vectors)
-    svm = get_support_vector_machine_mode(train)
+    show_confusion_matrix(confusion_matrix)
 
-    x = []
-    y = []
-    for _class in test.keys():
-        x += test[_class]
-        y += [_class] * len(test[_class])
-
-    score = svm.score(x, y)
-
-
-    # show_confusion_matrix(confusion_matrix)
-
-    # for i in range(confusion_matrix.shape[0]):
-    #     print(f"Class {i}: accuracy: {confusion_matrix[i, i] / np.sum(confusion_matrix[i])}")
+    for i in range(confusion_matrix.shape[0]):
+        print(f"Class {i}: accuracy: {confusion_matrix[i, i] / np.sum(confusion_matrix[i])}")
 
     print("Overall score: ", score)
 
     save_model(statisticalClassifier, "./model")
 
+def main_SVM():
+    statisticalClassifier = StatisticalClassifier()
+    vectors = load_object("./features/")
+    train, test = statisticalClassifier.split(vectors)
+    svm = get_support_vector_machine_model(train)
+
+    # Convert the test data
+    x = []
+    y = []
+    for _class in test.keys():
+        x.extend(test[_class])
+        y.extend([_class]*len(test[_class]))
+
+    prediction = svm.predict(x)
+
+    classes_count = len(test.keys())
+    confusion_matrix = np.zeros((classes_count, classes_count))
+    test_keys = list(test.keys())
+    test_keys.sort()
+    class_map = {_class: index for index, _class in enumerate(test_keys)}
+    for i in range(len(prediction)):
+        confusion_matrix[class_map[y[i]], class_map[prediction[i]]] += 1
+
+    show_confusion_matrix(confusion_matrix)
+
+    for i in range(confusion_matrix.shape[0]):
+        print(f"Class {i}: accuracy: {confusion_matrix[i, i] / np.sum(confusion_matrix[i])}")
+
+    print("Overall score: ", svm.score(x, y))
+
+
+
 
 # Example validation run: python ./validator.py
 if __name__ == '__main__':
     # This function will only be run if the current file is run directly
-    main()
+    main_SVM()
+
