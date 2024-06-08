@@ -16,18 +16,17 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
-# OpenCV Text write constants
+# OpenCV text writes constants
 font = cv2.FONT_HERSHEY_SIMPLEX
 bottomLeftCornerOfText = (10, 500)
 fontScale = 1
-fontColor = (0, 0, 0)
+fontColor = (255, 255, 255)
 thickness = 4
 lineType = 2
 org = (50, 50)
 
 # Feature extraction limit
-MAX_IMAGES_PER_CLASS = 1000
-
+MAX_IMAGES_PER_CLASS = 500
 
 def format_vector(landmarks):
     """
@@ -90,6 +89,11 @@ def video_feature_extraction(classifier):
             # Make letter prediction using classifier
             if results.multi_hand_landmarks:
                 predictions = classifier.predict([format_vector(results.multi_hand_landmarks[0].landmark)])
+                x, y, w, h = 0, 0, 125, 75
+
+                # Draw black background rectangle
+                cv2.rectangle(image, (x, x), (x + w, y + h), (0, 0, 0), -1)
+
                 cv2.putText(
                     image,
                     predictions[0],
@@ -117,7 +121,7 @@ def save_features(features, save_path):
     :param save_path: path in which the features will be saved
     :param features: array of features to save
     """
-    with open(join(save_path, "features_dump.pkl"), "wb") as writer:
+    with open(join(save_path, f'{MAX_IMAGES_PER_CLASS}_features_dump.pkl'), "wb") as writer:
         writer.write(pickle.dumps(features))
 
 

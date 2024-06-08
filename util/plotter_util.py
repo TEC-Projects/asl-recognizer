@@ -1,8 +1,4 @@
-###############################################################################################################
-#                                                                                                             #
-#   This file contains the utilitarian used to plot the result from the classification modelo                 #
-#                                                                                                             #
-###############################################################################################################
+# Utilitarian module used to plot the results from the classification model
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
