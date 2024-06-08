@@ -10,7 +10,7 @@ import numpy as np
 import seaborn as sn
 
 from classes.StatisticalClassifier import StatisticalClassifier
-from util.plotter_util import plot_confusion_matrix
+from util.plotter_util import plot_confusion_matrix, plot_bar_chart
 
 
 def load_object(load_path):

@@ -14,7 +14,7 @@ def plot_confusion_matrix(confusion_matrix):
     Procedure that plots the confusion matrix
     :param confusion_matrix: numpy ndarray that represents the confusion matrix
     """
-    sn.heatmap(confusion_matrix, annot=True)
+    sn.heatmap(confusion_matrix, annot=True, fmt='g')
     plt.xlabel("Predicción")
     plt.ylabel("Objetivo")
     plt.show()
