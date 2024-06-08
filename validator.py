@@ -3,11 +3,14 @@
 import pickle
 import matplotlib.pyplot as plt
 from os.path import join
+
+import pandas as pd
 import sklearn.svm
 import numpy as np
 import seaborn as sn
 
 from classes.StatisticalClassifier import StatisticalClassifier
+from util.plotter_util import plot_confusion_matrix
 
 
 def load_object(load_path):
@@ -125,15 +128,25 @@ def main_SVM():
     test_keys = list(test.keys())
     test_keys.sort()
     class_map = {_class: index for index, _class in enumerate(test_keys)}
+
     for i in range(len(prediction)):
         confusion_matrix[class_map[y[i]], class_map[prediction[i]]] += 1
 
-    show_confusion_matrix(confusion_matrix)
+    letters = list(filter(lambda c: c != 'J' and c != 'Z', list(map(chr, range(65, 91)))))
+    confusion_matrix_data_frame = pd.DataFrame(confusion_matrix, index=[i for i in letters], columns=[i for i in letters])
+
+    plot_confusion_matrix(confusion_matrix_data_frame)
+
+    accuracy_level_letter = []
 
     for i in range(confusion_matrix.shape[0]):
-        print(f"Class {i}: accuracy: {confusion_matrix[i, i] / np.sum(confusion_matrix[i])}")
+        current_accuracy = confusion_matrix[i, i] / np.sum(confusion_matrix[i])
+        accuracy_level_letter.append(current_accuracy)
+        print(f"Class {i}: accuracy: {current_accuracy}")
 
     print("Overall score: ", svm.score(x, y))
+
+    plot_bar_chart(letters, accuracy_level_letter)
 
 
 
