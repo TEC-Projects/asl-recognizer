@@ -19,7 +19,7 @@ def load_object(load_path):
     :param load_path: path in which the features are saved
     :return: list of tuples containing observations and labels
     """
-    with open(join(load_path, "1000_features_dump.pkl"), "rb") as reader:
+    with open(join(load_path, "7500_features_dump.pkl"), "rb") as reader:
         return pickle.load(reader)
 
 
